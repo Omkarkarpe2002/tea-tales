@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %} Search Results {% endblock title %}
+{% block blogactive %} active {% endblock blogactive %} 
+
+{% block body %}
+<style>
+    .read-more:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<div class="container my-3">
+    <h2>Search results:</h2>
+    {% if allPosts|length < 1 %}
+    <p>No search results found for "{{ query }}".</p>
+    <p>Suggestions:</p>
+    <ul>
+        <li>Make sure that all words are spelled correctly.</li>
+        <li>Try more general keywords.</li>
+        <li>Try fewer keywords.</li>
+        <li>Try different keywords.</li>
+    </ul>
+    {% else %}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for post in allPosts %}
+        <div class="col mb-4">
+            <div class="card h-100 mb-3 border-0">
+                <a href="/blog/{{ post.slug }}" style="text-decoration: none; color: inherit;">
+                    <img src="/media/{{ post.image }}" class="card-img-top mx-auto d-block rounded" alt="{{ post.title }}" style="width: 100%; height: 200px;">
+                </a>
+                <div class="card-body">
+                    <h5 class="card-title text-center mb-2"><a href="/blog/{{ post.slug }}" style="text-decoration: underline; font-weight: bold; color: inherit;">{{ post.title }}</a></h5>
+                    <p class="card-text mb-0">लेखक: {{ post.bookauthor }}</p>
+                    <p class="card-text mb-0">मूल्यांकन: {{ post.bookrating }}</p>
+                    <p class="card-text mb-0">प्रकार: {{ post.typeofbook }}</p>
+                    <p class="card-text mb-0">{{ post.content|safe |truncatechars:180 }} <a href="/blog/{{ post.slug }}" style="text-decoration: none; font-weight: bold;"><span class="read-more">Read more</span></a></p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block title %} BlogHome {% endblock title %}
+ 
+    {% block js %}  
+     <script>
+    let previews=document.getElementsByClassName('preview');
+      Array.from(previews).forEach((element))=>{
+          element.innerHTML=element.innerText;
+      };)
+    </script>
+      {% endblock js %}
+      
+{% block blogactive %} active {% endblock blogactive %} 
+
+
+{% block body %}
+<style>
+    .posts-container {
+        padding-top: 90px; /* Adjust this value as needed */
+    }
+
+    .read-more:hover {
+        text-decoration: underline;
+    }
+    .card-img-top {
+        transition: transform 0.3s ease; /* Add transition for smooth effect */
+    }
+    
+    .card-img-top:hover {
+        transform: scale(1.05); /* Apply zoom-in effect */
+    }
+    .card-body {
+        border-bottom: 1px solid #ccc; /* Add bottom border */
+        padding-bottom: 15px; /* Adjust padding as needed */
+        margin-bottom: 15px; /* Adjust margin as needed */
+        animation: fadeInAnimation 1s ease-in-out forwards; /* Apply fade-in animation */
+        opacity: 0; /* Start with opacity 0 */
+    }
+    
+    @keyframes fadeInAnimation {
+        from {
+            opacity: 0; /* Start with opacity 0 */
+            transform: translateY(-20px); /* Move card up */
+        }
+        to {
+            opacity: 1; /* End with opacity 1 */
+            transform: translateY(0); /* Move card to its original position */
+        }
+    }
+</style>
+  
+<div class="container px-1 mt-8 mb-4 posts-container">
+    {% for message in messages  %}            
+<div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      <strong>Message : </strong> {{ message }}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+{% endfor %}  
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for post in allPosts %}
+        <div class="col mb-4">
+            <div class="card h-100 mb-3 border-0">
+                <a href="/blog/{{post.slug}}" style="text-decoration: none; color: inherit;">
+                    <img src="/media/{{ post.image }}" class="card-img-top mx-auto d-block rounded" alt="{{ post.title }}" style="width: 64%; height: 230px;">
+                </a>
+                <div class="card-body">
+                    <h5 class="card-title text-center mb-2"><a href="/blog/{{post.slug}}" style="text-decoration: underline; font-weight: bold; color: inherit;">{{ post.title }}</a></h5>
+                    <p class="card-text mb-0"> {{ post.bookauthor }}</p>
+                    <p class="card-text mb-0">{{ post.bookrating }}</p>
+                    <p class="card-text mb-0">{{ post.typeofbook }}</p>
+                    <p class="card-text mb-0">{{ post.content|safe |truncatechars:120}} <a href="/blog/{{post.slug}}" style="text-decoration: none; font-weight: bold;"><span class="read-more">Read more</span></a></p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="d-flex justify-content-center">
+<nav aria-label="...">
+    <ul class="pagination">
+        <!-- Previous page link -->
+        {% if allPosts.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ allPosts.previous_page_number }}" tabindex="-1">Previous</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">Previous</span>
+        </li>
+        {% endif %}
+
+        <!-- Page links -->
+        {% for num in allPosts.paginator.page_range %}
+        <li class="page-item {% if num == allPosts.number %}active{% endif %}">
+            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+        </li>
+        {% endfor %}
+
+        <!-- Next page link -->
+        {% if allPosts.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ allPosts.next_page_number }}">Next</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">Next</span>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+</div>
+
+{% endblock %} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en"style="overflow-x: hidden;">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    {% load static %}
+
+    <title>{% block title %}   {% endblock title %}</title>
+    <style>
+
+        /* Your other CSS styles here */
+        @media (min-width: 992px) {
+            .font-size-responsive {
+                font-size: 1.5rem; /* Define the font size for larger screens */
+            }
+        }
+    
+        @media (max-width: 992px) {
+            .font-size-responsive {
+                font-size: 2vh; /* Define the font size for small screens */
+            }
+        }
+      .read-more:hover {
+          text-decoration: underline;
+      }
+      .card-img-top {
+          transition: transform 0.3s ease; /* Add transition for smooth effect */
+      }
+      
+      .card-img-top:hover {
+          transform: scale(1.05); /* Apply zoom-in effect */
+      }
+      .card-body {
+          border-bottom: 1px solid #ccc; /* Add bottom border */
+          padding-bottom: 15px; /* Adjust padding as needed */
+          margin-bottom: 15px; /* Adjust margin as needed */
+          animation: fadeInAnimation 1s ease-in-out forwards; /* Apply fade-in animation */
+          opacity: 0; /* Start with opacity 0 */
+      }
+      
+      @keyframes fadeInAnimation {
+          from {
+              opacity: 0; /* Start with opacity 0 */
+              transform: translateY(-20px); /* Move card up */
+          }
+          to {
+              opacity: 1; /* End with opacity 1 */
+              transform: translateY(0); /* Move card to its original position */
+          }
+      }
+
+    </style>
+</head>
+<body style="overflow-x: hidden;">
+<nav class="navbar navbar-expand-lg navbar-light" style="background: transparent;">
+    <a class="navbar-brand" style="font-weight: bold;" href="/">Tea&Tales</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item {% block homeactive %}  {% endblock homeactive %}">
+                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item {% block contactactive %}  {% endblock contactactive %} ">
+                <a class="nav-link" href="/contact">Contact</a>
+            </li>
+            <li class="nav-item {% block blogactive %}  {% endblock blogactive %} ">
+                <a class="nav-link" href="/blog">Blog</a>
+            </li>
+
+        </ul>
+        <div class="ml-auto form-inline ">
+            {% if user.is_authenticated %}
+                <ul class="navbar-nav mr-2">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href='#' id="navbarDropdown" role="button" data-toggle="dropdown"> Welcome {{request.user}}</a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                          <input type="hidden" name="next" value="{{ request.GET.next }}">
+                            <a class="dropdown-item" href="/logout">Logout</a>
+                        </div>
+                    </li>
+                </ul>
+            {% else %}
+                <!-- Button to  trigger Login modal -->
+                <button type="button" class="btn btn-primary mr-2" data-toggle="modal" data-target="#loginModal">
+                    Login
+                </button>
+
+                <button type="button" class="btn btn-primary mr-2" data-toggle="modal" data-target="#signupModal">
+                    SignUp
+                </button>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+{% block body %}
+{% load static %}
+
+<blockquote class="blockquote mt-1 text-center" style="background-color: rgba(0, 0, 0, 0.5); color: white;">
+    <p id="quote-text" class="mb-0 font-weight-bold" style="font-size: 1.3em;"></p>
+</blockquote>
+
+{% for message in messages  %}            
+<div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      <strong>Message : </strong> {{ message }}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+{% endfor %}    
+
+<div class="container mt-4">
+    <div class="row justify-content-start">
+      <div class="col-md-12 custom-left-padding" style="padding-left:3px;"> <!-- Adding custom-left-padding class directly to col-md-12 -->
+        <h2 class="ml-md-0 pl-md-3 font-size-responsive" style="text-decoration: underline;">Recent Posts:</h2>
+      </div>
+    </div>
+  </div>
+  
+
+<div class="container px-1 mt-4 mb-4">
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+      {% for post in latest_posts %}
+      <div class="col mb-4">
+        <div class="card h-100 mb-3 border-0">
+            <a href="/blog/{{post.slug}}" style="text-decoration: none; color: inherit;">
+                <img src="/media/{{ post.image }}" class="card-img-top mx-auto d-block rounded" alt="{{ post.title }}" style="width: 64%; height: 230px;">
+            </a>
+            <div class="card-body">
+                <h5 class="card-title text-center mb-2"><a href="/blog/{{post.slug}}" style="text-decoration: underline; font-weight: bold; color: inherit;">{{ post.title }}</a></h5>
+                <p class="card-text mb-0"> {{ post.bookauthor }}</p>
+                <p class="card-text mb-0">{{ post.bookrating }}</p>
+                <p class="card-text mb-0">{{ post.typeofbook }}</p>
+                <p class="card-text mb-0">{{ post.content|safe |truncatechars:120}} <a href="/blog/{{post.slug}}" style="text-decoration: none; font-weight: bold;"><span class="read-more">Read more</span></a></p>
+
+            </div>
+        </div>
+    </div>
+      {% endfor %}
+  </div>
+
+  <div class="d-flex justify-content-end" style="margin-top: -10px;">
+    <p class="text-center" style="margin-bottom: 10px;">
+        <a href="/blog" class="btn btn-primary" style="max-width: 200px;">Visit Blog</a>
+    </p>
+</div>
+
+
+</div>
+
+
+<footer class="footer mt-0 py-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                Made with <span style="color: red; font-size: 1.2em;">❤️</span> by Omkar!
+            </div>
+        </div>
+    </div>
+</footer>
+{% endblock %}
+
+<!-- SignUp Modal -->
+<div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="signupModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="signupModalTitle">SignUp Here</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action= "/signup" method='post'>
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input type="text" class="form-control" id="username" name="username"  placeholder="Please enter your unique username" required>
+    </div>
+    <div class="form-group">
+      <label for="fname">First Name</label>
+      <input type="text" class="form-control" id="fname" name="fname" placeholder="Enter Your First Name" required>
+    </div>
+    <div class="form-group">
+      <label for="lname">Last Name</label>
+      <input type="text" class="form-control" id="lname" name="lname" placeholder="Enter Your Last Name" required>
+    </div>
+    <div class="form-group">
+      <label for="email">Email address</label>
+      <input type="email" class="form-control" id="email" name="email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" placeholder="Please enter your email address"  required>
+    </div>
+    <div class="form-group">
+      <label for="pass1">Choose a password</label>
+      <input type="password" class="form-control" id="pass1" name="pass1" placeholder="Choose Your Password" required>
+    </div>
+    <div class="form-group">
+      <label for="pass2">Confirm Password</label>
+      <input type="password" class="form-control" id="pass2" name="pass2" placeholder="Enter your password again" required>
+    </div>
+          {% csrf_token %}
+          <button type="submit" class="btn btn-primary" >Submit</button>
+  </form>
+        </div>
+        <div class="modal-footer">
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  
+<!-- Login Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="loginModalTitle">Login Here</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="loginForm" action="/login" method="POST"> {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.GET.next }}">
+  <div class="form-group">
+    <label for="username">Username</label>
+    <input type="text" class="form-control" id="loginusername" name="loginusername" placeholder="Enter your username "required>
+  </div>
+  <div class="form-group">
+    <label for="pass">Enter your password </label>
+    <input type="password" class="form-control" id="loginpassword" name="loginpassword" placeholder="Enter your password "required>
+  </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+      </div>
+       <div class="modal-footer">
+      </div>
+
+  
+  
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+
+<script>
+    // List of quotes
+    var quotes = [
+        "Books are a uniquely portable magic. - Stephen King",
+        "“Books should go where they will be most appreciated, and not sit unread, gathering dust on a forgotten shelf, don't you agree?” ― Christopher Paolini",
+        "“Some books should be tasted, some devoured, but only a few should be chewed and digested thoroughly.”― Sir Francis Bacon",
+        "“Until I feared I would lose it, I never loved to read. One does not love breathing.”― Harper Lee, To Kill a Mockingbird",
+        "“Books are the ultimate Dumpees: put them down and they’ll wait for you forever; pay attention to them and they always love you back.”― John Green, An Abundance of Katherines",
+        "“It is what you read when you don't have to that determines what you will be when you can't help it.”― Oscar Wilde",
+        "“A reader lives a thousand lives before he dies, said Jojen. The man who never reads lives only one.”― George R.R. Martin, A Dance with Dragons",
+        "“People say that life is the thing, but I prefer reading.”― Logan Pearsall Smith",
+        "“I cannot remember the books I've read any more than the meals I have eaten; even so, they have made me.” ― Ralph Waldo Emerson",
+        "“There are worse crimes than burning books. One of them is not reading them.” ― Joseph Brodsky",
+        "“A classic is a book that has never finished saying what it has to say.”― Italo Calvino, The Uses of Literature",
+        "“Literature is the most agreeable way of ignoring life.”― Fernando Pessoa, The Book of Disquiet",
+        "In the case of good books, the point is not to see how many of them you can get through, but rather how many can get through to you. —Mortimer J. Adlerto",
+        "“A book is a dream that you hold in your hands.” - Neil Gaiman",
+        "“Read the best books first, or you may not have a chance to read them at all.” —Henry David Thoreau",
+        "“He liked the mere act of reading, the magic of turning scratches on a page into words inside his head.” – John Green",
+        "“Books are mirrors: you only see in them what you already have inside you.” – Carlos Ruiz Zafon",
+        "“The man who does not read has no advantage over the man who cannot read.” - Mark Twain",
+        "“Books are the plane, and the train, and the road. They are the destination, and the journey. They are home.” - Anna Quindlen",
+        "“I declare after all there is no enjoyment like reading! How much sooner one tires of any thing than of a book!”  - Jane Austen",
+    ];
+
+    // Function to randomly select and display a quote
+    function displayRandomQuote() {
+        var randomIndex = Math.floor(Math.random() * quotes.length);
+        var quoteElement = document.getElementById('quote-text');
+        quoteElement.textContent = quotes[randomIndex];
+    }
+
+    // Call the function to display a random quote when the page loads
+    displayRandomQuote();
+
+    // Call the function periodically to change the quote
+    setInterval(displayRandomQuote, 15000); // Change quote every 10 seconds
+</script>
+</body>
+</html>
