@@ -118,7 +118,7 @@ def handleSignUp(request):
         myuser.first_name = fname
         myuser.last_name = lname
         myuser.save()
-        messages.success(request, "Your account has been successfully created!")
+        messages.success(request, "Your account has been successfully created! You can login now!!")
         if next_url:
             return HttpResponseRedirect(next_url)
         else:
