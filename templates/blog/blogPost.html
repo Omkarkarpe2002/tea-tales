@@ -27,11 +27,12 @@
 {% endfor %}  
     <h4 class="blog-post-title" style="text-decoration: underline">{{post.title}}</h4>
     <p class="blog-post-meta">{{post.timeStamp}} by  {{post.author}} </p>
-    <img style="    max-height: 100%;
+    {% load static %}
+    <img style="max-height: 100%;
                 width: auto%;
                 max-width: 100%;
                 border: 4px solid red;
-                vertical-align:middle;margin:20px" src="/media/{{post.image}}" alt="" class="img-responsive center-block d-block mx-auto" width="300" height="300"> 
+                vertical-align:middle;margin:20px" src="{% static '' %}{{ post.image }}"  alt="" class="img-responsive center-block d-block mx-auto" width="300" height="300"> 
     <div class="text-center"> <!-- Center align the tagline -->
         <h6 class="blog-post-booktagline" style="font-weight:bold" >{{post.booktagline}}</h6>
     </div>

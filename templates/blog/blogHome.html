@@ -67,7 +67,8 @@
         <div class="col mb-4">
             <div class="card h-100 mb-3 border-0">
                 <a href="/blog/{{post.slug}}" style="text-decoration: none; color: inherit;">
-                    <img src="/media/{{ post.image }}" class="card-img-top mx-auto d-block rounded" alt="{{ post.title }}" style="width: 64%; height: 230px;">
+                    {% load static%}
+                    <img  src="{% static '' %}{{ post.image }}"  class="card-img-top mx-auto d-block rounded" alt="{{ post.title }}" style="width: 64%; height: 230px;">
                 </a>
                 <div class="card-body">
                     <h5 class="card-title text-center mb-2">

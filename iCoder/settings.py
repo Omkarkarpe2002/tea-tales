@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-*ppl3x-yda8v^=@=&@bosvjv9xu5#s$l@01r+4ze=x8utj=khu'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['tea-and-tales-5690e3f3eb4b.herokuapp.com','127.0.0.1']
 # Application definition
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'home.apps.HomeConfig', 
     'blog.apps.BlogConfig',
     'django.contrib.humanize',
+    'storages',
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -101,7 +102,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
@@ -118,18 +118,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 
-STATIC_URL = '/static/'
-
 MEDIA_URL = '/media/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR,  "static"),
-    
+    os.path.join(BASE_DIR,  "static"), 
 ]
 MEDIA_ROOT = os.path.join(BASE_DIR , 'public/static')
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
-STATIC_ROOT = os.path.join(BASE_DIR , 'staticfiles')
+# STATIC_ROOT = os.path.join(BASE_DIR , 'staticfiles')
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -137,4 +132,27 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MESSAGE_TAGS = {
     messages.ERROR:'danger'
+}
+
+# #amazons3configs
+# AWS configuration
+AWS_ACCESS_KEY_ID = 'AKIAXNEYMDEK6QMDUDHI' 
+AWS_SECRET_ACCESS_KEY = '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' 
+AWS_STORAGE_BUCKET_NAME = 'tea-and-tales'
+AWS_S3_FILE_OVERWRITE = False
+
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.ap-south-1.amazonaws.com' % (AWS_STORAGE_BUCKET_NAME)
+STATIC_URL = 'https://%s/' % (AWS_S3_CUSTOM_DOMAIN)
+
+STORAGES = {
+
+    # Media file (image) management   
+    "default": {
+        "BACKEND": "storages.backends.s3boto3.S3StaticStorage",
+    },
+    
+    # CSS and JS file management
+    "staticfiles": {
+        "BACKEND": "storages.backends.s3boto3.S3StaticStorage",
+    },
 }
