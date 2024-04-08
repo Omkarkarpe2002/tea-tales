@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-*ppl3x-yda8v^=@=&@bosvjv9xu5#s$l@01r+4ze=x8utj=khu'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['tea-and-tales-5690e3f3eb4b.herokuapp.com','127.0.0.1']
 # Application definition
@@ -136,13 +136,24 @@ MESSAGE_TAGS = {
 
 # #amazons3configs
 # AWS configuration
-AWS_ACCESS_KEY_ID = 'AKIAXNEYMDEK6QMDUDHI' 
-AWS_SECRET_ACCESS_KEY = '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' 
-AWS_STORAGE_BUCKET_NAME = 'tea-and-tales'
-AWS_S3_FILE_OVERWRITE = False
+# AWS_ACCESS_KEY_ID = 'AKIAXNEYMDEK6QMDUDHI'
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
 
-AWS_S3_CUSTOM_DOMAIN = '%s.s3.ap-south-1.amazonaws.com' % (AWS_STORAGE_BUCKET_NAME)
-STATIC_URL = 'https://%s/' % (AWS_S3_CUSTOM_DOMAIN)
+# AWS_SECRET_ACCESS_KEY = 'GQ20x2TPllcd7VmB4jJ5zUaEoEugQFSHqqo60sQK' 
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+
+# AWS_STORAGE_BUCKET_NAME = 'tea-and-tales'
+AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
+
+# AWS_S3_FILE_OVERWRITE = False
+AWS_S3_FILE_OVERWRITE = os.getenv('AWS_S3_FILE_OVERWRITE')
+
+# AWS_S3_CUSTOM_DOMAIN = '%s.s3.ap-south-1.amazonaws.com' % (AWS_STORAGE_BUCKET_NAME)
+AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.ap-south-1.amazonaws.com"
+
+# STATIC_URL = 'https://%s/' % (AWS_S3_CUSTOM_DOMAIN)
+STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
+
 
 STORAGES = {
 
