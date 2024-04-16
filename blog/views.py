@@ -12,7 +12,7 @@ def blogHome(request):
     allPosts= Post.objects.all().order_by('-timeStamp')
     alld=Addblog.objects.all()
 
-    paginator = Paginator(allPosts, 6)
+    paginator = Paginator(allPosts, 9)
     page_number = request.GET.get('page')
     try:
         allPosts = paginator.page(page_number)

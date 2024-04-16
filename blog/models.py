@@ -11,7 +11,7 @@ class Post(models.Model):
     author=models.CharField(max_length=14)
     bookauthor=models.CharField(max_length=100, default="")
     bookrating=models.CharField(max_length=50, default="")
-    booktagline=models.CharField(max_length=1000, default="")
+    booktagline=models.CharField(max_length=1000, null=True, blank=True)
     content=models.TextField()
     image = models.ImageField(upload_to='post', null=True, blank=True)
     slug=models.CharField(max_length=130)
